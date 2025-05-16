@@ -177,17 +177,22 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        updateGPS();
+        //updateGPS();
     } //final onCreate method
+
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             sw_updates.setChecked(false);
             stopLocationUpdates();
+            updateGPS(); // Llamada segura
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_FINE_LOCATION);
         }
     }
+
 
     private void stopLocationUpdates() {
 
@@ -222,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case PERMISSIONS_FINE_LOCATION:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     updateGPS();
                 }
                 else {
