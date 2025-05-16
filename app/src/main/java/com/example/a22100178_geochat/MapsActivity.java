@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,8 +24,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ActivityMapsBinding binding;
 
     List<Location>savedLocations;
-
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,19 +58,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         LatLng lastLocationPlaced = sydney;
 
-        for (Location location: savedLocations) {
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(latLng);
-            markerOptions.title("Lat: " + location.getLatitude() + "Lon: " + location.getLongitude());
-            mMap.addMarker(markerOptions);
-            lastLocationPlaced = latLng;
+        if (savedLocations != null) {
+            for (Location location : savedLocations) {
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title("Lat: " + location.getLatitude() + "Lon: " + location.getLongitude());
+                mMap.addMarker(markerOptions);
+                lastLocationPlaced = latLng;
+            }
+
+            CircleOptions circleOptions = new CircleOptions().center(new LatLng(savedLocations.get(savedLocations.size() - 1).getLatitude(), savedLocations.get(savedLocations.size() - 1).getLongitude())).radius(20).fillColor(0x55000000).strokeWidth(5);
+            mMap.addCircle(circleOptions);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocationPlaced, 18.0f));
+
         }
-
-        CircleOptions circleOptions = new CircleOptions().center(new LatLng(savedLocations.get(savedLocations.size()-1).getLatitude(), savedLocations.get(savedLocations.size()-1).getLongitude())).radius(20).fillColor(0x55000000).strokeWidth(5);
-        mMap.addCircle(circleOptions);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocationPlaced, 18.0f));
-
+        else {
+            Toast.makeText(this, "No se han registrado ubicaciones", Toast.LENGTH_SHORT).show();
+        }
         // Add a marker in Sydney and move the camera
 
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
