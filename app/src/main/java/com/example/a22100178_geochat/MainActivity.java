@@ -37,36 +37,26 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.List;
 
+import POJOs.Usuario;
+
 public class MainActivity extends AppCompatActivity {
 
-    public static final int DEFAULT_UPDATE_INTERVAL = 30;
-    public static final int FAST_UPDATE_INTERVAL = 5;
-    private static final int PERMISSIONS_FINE_LOCATION = 99;
-    private final float GEOFENCE_RADIUS = 20;
-    private final String GEOFENCE_ID = "User_Geofence";
-    private GeofencingClient geofencingClient;
+    private LocationManagerHelper locationHelper;
+    private GeofenceManager geofenceManager;
     private GeofenceHelper geofenceHelper;
+
+    private static final int PERMISSIONS_FINE_LOCATION = 99;
 
     TextView tv_lat, tv_lon, tv_alt, tv_accuracy, tv_speed, tv_sensor, tv_updates, tv_address, tv_wp;
     Switch sw_updates, sw_gps;
     Button btn_nw, btn_sw, btn_sm;
 
-    //variables para recordar si estamos rastreando al usuario o no.
-    boolean updateOn = false;
-
     //current location
     Location currentLocation;
-
     //list  of saved locations
     List<Location> savedLocations;
 
-    //Archivo de configuración para todas las configuraciones relacionadas con la clase FusedLocationProviderClient
-    LocationRequest locationRequest;
-
     LocationCallback locationCallBack;
-
-    //Clase para la mayoria de las funciones de la app, proporcionada por la API de google
-    FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +64,22 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
-        geofencingClient = LocationServices.getGeofencingClient(this);
+        locationCallBack = new LocationCallback() {
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                updateUIValues(locationResult.getLastLocation());
+
+            }
+        };
+
+        //Inicializando helper de geofences
         geofenceHelper = new GeofenceHelper(this);
+        geofenceManager = new GeofenceManager(this, LocationServices.getGeofencingClient(this), geofenceHelper);
+
+        //Inicializando helper de ubicación
+        locationHelper = new LocationManagerHelper(this, locationCallBack);
 
         tv_lat = findViewById(R.id.tv_latitud);
         tv_lon = findViewById(R.id.tv_longitud);
@@ -93,23 +96,7 @@ public class MainActivity extends AppCompatActivity {
         btn_sw = findViewById(R.id.btn_showWayPoint);
         btn_sm = findViewById(R.id.btn_showMap);
 
-        locationRequest = new LocationRequest();
 
-        locationRequest.setInterval(1000 * DEFAULT_UPDATE_INTERVAL);
-
-        locationRequest.setFastestInterval(1000 * FAST_UPDATE_INTERVAL);
-
-        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-
-        locationCallBack = new LocationCallback() {
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-
-                updateUIValues(locationResult.getLastLocation());
-
-            }
-        };
 
         btn_nw.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,11 +130,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (sw_gps.isChecked()) {
-                    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                    locationHelper.setHighAccuracy(true); //usa gps
                     tv_sensor.setText("Using GPS sensors");
                 }
                 else {
-                    locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                    locationHelper.setHighAccuracy(false); //usa wifi y torres
                     tv_sensor.setText("Using Towers + Wifi");
                 }
             }
@@ -157,10 +144,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (sw_updates.isChecked()) {
-                    startLocationUpdates();
+                    locationHelper.startLocationUpdates();
                 }
                 else {
-                    stopLocationUpdates();
+                    locationHelper.stopLocationUpdates();
                 }
             }
         });
@@ -186,38 +173,10 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             sw_updates.setChecked(false);
-            stopLocationUpdates();
+            locationHelper.stopLocationUpdates();
             updateGPS(); // Llamada segura
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_FINE_LOCATION);
-        }
-    }
-
-
-    private void stopLocationUpdates() {
-
-        tv_updates.setText("Location is NOT beign tracked");
-        tv_lat.setText("Not tracking location");
-        tv_lon.setText("Not tracking location");
-        tv_speed.setText("Not tracking location");
-        tv_address.setText("Not tracking location");
-        tv_accuracy.setText("Not tracking location");
-        tv_alt.setText("Not tracking location");
-        tv_sensor.setText("Not tracking location");
-
-        fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
-    }
-
-    private void startLocationUpdates() {
-        tv_updates.setText("Location is being tracked");
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, null);
-            updateGPS();
-        }
-        else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_FINE_LOCATION);
-            }
         }
     }
 
@@ -239,24 +198,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateGPS() {
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    updateUIValues(location);
-                    currentLocation = location;
-                }
-            });
-        }
-        else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_FINE_LOCATION);
-            }
-        }
-
-
+        locationHelper.getLastKnownLocation(location -> {
+            currentLocation = location;
+            updateUIValues(location);
+        });
     }
 
     private void updateUIValues(Location location) {
@@ -306,17 +251,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addGeofenceAtUserLocation(Location location) {
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        Geofence geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, GEOFENCE_RADIUS, Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT);
-
-        GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofence);
-        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.e("GEOFENCE", "No hay permisos de ubicación");
-            return;
-        }
-
-        geofencingClient.addGeofences(geofencingRequest, pendingIntent).addOnSuccessListener(unused -> Log.i("GEOFENCE", "Geovalla añadida correctamente")).addOnFailureListener(e -> Log.e("GEOFENCE", "Fallo al añadir geovalla: " + e.getMessage()));
+        geofenceManager.addGeofenceAtLocation(currentLocation);
     }
 }

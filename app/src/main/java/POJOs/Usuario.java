@@ -1,7 +1,7 @@
 package POJOs;
 
 public class Usuario {
-    public String getNombre() {
+    public  String getNombre() {
         return nombre;
     }
 
@@ -25,7 +25,7 @@ public class Usuario {
         this.longitud = longitud;
     }
 
-    public String nombre;
+    public static String nombre;
     public double latitud;
     public double longitud;
 
