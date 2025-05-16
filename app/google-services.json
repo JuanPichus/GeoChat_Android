@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1032308042439",
+    "firebase_url": "https://geochat-app-496ec-default-rtdb.firebaseio.com",
+    "project_id": "geochat-app-496ec",
+    "storage_bucket": "geochat-app-496ec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1032308042439:android:9af3c6729371495f1f2ce2",
+        "android_client_info": {
+          "package_name": "com.example.a22100178_geochat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvp8a7kCcI47nrwBsoZDF0veyjuv6gMc4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
