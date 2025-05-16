@@ -48,13 +48,15 @@ public class login extends AppCompatActivity {
         et_username = findViewById(R.id.et_username);
         btn_register = findViewById(R.id.btn_register);
 
-
-
-
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registrarUsuario();
+                if (checkLocationPermissions()) {
+                    goToMainActivity();
+                } else {
+                    requestLocationPermissions();
+                }
             }
         });
     }
@@ -76,13 +78,6 @@ public class login extends AppCompatActivity {
             .addOnSuccessListener(aVoid -> {
                 Toast.makeText(getApplicationContext(), "¡El registro fue exitoso!", Toast.LENGTH_SHORT).show();
                 // Redirigir a MainActivity
-                if (checkLocationPermissions()) {
-                    goToMainActivity();
-                } else {
-                    requestLocationPermissions();
-                }
-
-
             })
             .addOnFailureListener(e -> {
                 Toast.makeText(getApplicationContext(), "Error al registrar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -90,6 +85,7 @@ public class login extends AppCompatActivity {
 
         }
     }
+
     private boolean checkLocationPermissions() {
         return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -103,6 +99,7 @@ public class login extends AppCompatActivity {
                 Manifest.permission.ACCESS_BACKGROUND_LOCATION
         }, LOCATION_PERMISSION_REQUEST_CODE);
     }
+
     private void goToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -128,5 +125,4 @@ public class login extends AppCompatActivity {
             }
         }
     }
-
 }
