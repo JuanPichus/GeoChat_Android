@@ -54,7 +54,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        LatLng lastLocationPlaced;
+        LatLng defLoc = new LatLng(-34, 151);
+
+        LatLng lastLocationPlaced = defLoc;
 
         if (savedLocations != null) {
             for (Location location : savedLocations) {
