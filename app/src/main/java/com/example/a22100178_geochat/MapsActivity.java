@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -63,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         LatLng lastLocationPlaced = defLoc;
 
-        if (savedLocations != null) {
+        try {
             for (Location location : savedLocations) {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 MarkerOptions markerOptions = new MarkerOptions();
@@ -76,10 +77,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             CircleOptions circleOptions = new CircleOptions().center(new LatLng(savedLocations.get(savedLocations.size() - 1).getLatitude(), savedLocations.get(savedLocations.size() - 1).getLongitude())).radius(20).fillColor(0x55000000).strokeWidth(5);
             mMap.addCircle(circleOptions);
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocationPlaced, 18.0f));
-
-        }
-        else {
-            Toast.makeText(this, "No se han registrado ubicaciones", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("MAPA", "Error al cargar direcciones: " + e.getMessage());
         }
         // Add a marker in Sydney and move the camera
 
