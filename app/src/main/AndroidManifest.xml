@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme._22100178_GeoChat"
         tools:targetApi="31">
-
+        <activity
+            android:name=".chat"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -42,9 +44,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".login"
             android:exported="true">
