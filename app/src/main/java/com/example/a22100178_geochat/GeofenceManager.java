@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
@@ -39,7 +40,7 @@ public class GeofenceManager {
         }
 
         geofencingClient.addGeofences(request, geofenceHelper.getPendingIntent())
-                .addOnSuccessListener(unused -> Log.i("GEOFENCE", "Geovalla añadida correctamente"))
-                .addOnFailureListener(e -> Log.e("GEOFENCE", "Error al añadir geovalla: " + e.getMessage()));
+                .addOnSuccessListener(unused -> Toast.makeText(activity, "Geovalla creada correctamente", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(activity, "Error: La Geovalla no se pudo crear", Toast.LENGTH_SHORT).show());
     }
 }
