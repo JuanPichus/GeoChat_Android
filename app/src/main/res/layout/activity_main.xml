@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Latitud: ">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_latitud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10px"
+        android:text="0.00"
+        android:textStyle="bold">
+
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Longitud: ">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_longitud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10px"
+        android:text="0.00"
+        android:textStyle="bold">
+
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Altitud: ">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_altitud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10px"
+        android:text="0.00"
+        android:textStyle="bold">
+
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exactitud: ">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_exactitud"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10px"
+        android:text="0.00"
+        android:textStyle="bold">
+
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Velocidad: ">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_velocidad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10px"
+        android:text="0.00"
+        android:textStyle="bold">
+
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dirección: ">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_direccion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10px"
+        android:text=""
+        android:textStyle="bold">
+
+    </TextView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/black">
+
+    </View>
+
+    <Switch
+        android:id="@+id/sw_updates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Actulizaciónes de Ubicación">
+
+    </Switch>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Actualizaciones: ">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_updates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10px"
+        android:text="Off"
+        android:textStyle="bold">
+
+    </TextView>
+
+    <Switch
+        android:id="@+id/sw_gps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GPS/Savepower">
+
+    </Switch>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sensor: ">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_sensor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10px"
+        android:text="Cell Tower + Wifi"
+        android:textStyle="bold">
+
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Waypoints: ">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tv_waypoints"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10px"
+        android:text="0"
+        android:textStyle="bold">
+
+    </TextView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/black">
+
+    </View>
+
+    <Button
+        android:id="@+id/btn_newWayPoint"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="New WayPoint"
+        android:layout_gravity="center"
+        android:backgroundTint="#04D17C">
+
+    </Button>
+
+    <Button
+        android:id="@+id/btn_showWayPoint"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Show Waypoint list"
+        android:layout_gravity="center"
+        android:backgroundTint="#04D15D">
+
+    </Button>
+
+    <Button
+        android:id="@+id/btn_showMap"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Show Map"
+        android:layout_gravity="center"
+        android:backgroundTint="#059243">
+
+    </Button>
+
+
+
+
+</LinearLayout>

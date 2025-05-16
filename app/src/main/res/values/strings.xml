@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">22100178_GeoChat</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="my_map_api_key">AIzaSyDJXnsbV3_NPuZZtWY97AsGhRSHG_zdZJw</string>
+</resources>
