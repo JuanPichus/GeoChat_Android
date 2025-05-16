@@ -56,6 +56,26 @@ public class LocationManagerHelper {
         }
     }
 
+    public void getCurrentLocation(OnLocationReady callback) {
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationProviderClient.getCurrentLocation(
+                    LocationRequest.PRIORITY_HIGH_ACCURACY,
+                    null
+            ).addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        callback.onLocationResult(location);
+                    } else {
+                        Log.w("LOCATION", "No se pudo obtener la ubicación actual");
+                    }
+                }
+            });
+        } else {
+            requestFineLocationPermission();
+        }
+    }
+
     public void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);

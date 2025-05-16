@@ -101,7 +101,7 @@ public class login extends AppCompatActivity {
     }
 
     private void goToMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
         finish(); // opcional, para que no se pueda volver con el botón "atrás"
     }

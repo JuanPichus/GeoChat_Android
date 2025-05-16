@@ -38,13 +38,18 @@
         <activity
             android:name=".MapsActivity"
             android:exported="false"
-            android:label=".MapsActivity" />
+            android:label=".MapsActivity">
+        </activity>
+
         <activity
             android:name=".ShowSavedLocastionsList"
             android:exported="false" />
+
         <activity
             android:name=".MainActivity"
-            android:exported="false"></activity>
+            android:exported="false">
+        </activity>
+
         <activity
             android:name=".login"
             android:exported="true">
@@ -54,6 +59,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
 
         <receiver
             android:name=".GeofenceBroadcastReceiver"
