@@ -51,5 +51,12 @@ public class Usuario {
         this.latitud = latitud;
         this.longitud = longitud;
     }
+
+    public Usuario(String nombre, double latitud, double longitud) {
+        this.nombre = nombre;
+        this.password = null;
+        this.latitud = latitud;
+        this.longitud = longitud;
+    }
 }
 

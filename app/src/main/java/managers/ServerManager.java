@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import POJOs.Mensaje;
+import POJOs.Usuario;
 
 public class ServerManager {
 
@@ -40,6 +41,11 @@ public class ServerManager {
     public interface messageListenerCallback {
         void onMensajesRecibidos(List<Mensaje> mensajes);
         void onError(String error);
+    }
+
+    public interface UsuarioListCallback {
+        void onSuccess(List<Usuario> usuarios);
+        void onFailure(String error);
     }
 
 
@@ -91,6 +97,32 @@ public class ServerManager {
             callback.onFailure("Error de conexión: " + e.getMessage());
         });
     }
+
+    public void getUserLocations(UsuarioListCallback callback) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Usuarios");
+
+        dbRef.get().addOnSuccessListener(snapshot -> {
+            List<Usuario> listaUsuarios = new ArrayList<>();
+
+            for (DataSnapshot userSnap : snapshot.getChildren()) {
+                String username = userSnap.getKey();
+                Double latitud = userSnap.child("latitud").getValue(Double.class);
+                Double longitud = userSnap.child("longitud").getValue(Double.class);
+
+                // Validar valores
+                if (username != null && latitud != null && longitud != null) {
+                    Usuario usuario = new Usuario(username, latitud, longitud);
+                    listaUsuarios.add(usuario);
+                }
+            }
+
+            callback.onSuccess(listaUsuarios);
+
+        }).addOnFailureListener(e -> {
+            callback.onFailure("Error al obtener ubicaciones: " + e.getMessage());
+        });
+    }
+
 
     public void sendMessage(String emisor, String receptor, String texto, ChatCallback callback) {
         String chatId = getChatId(emisor, receptor);
