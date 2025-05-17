@@ -104,9 +104,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 onClickUpdateLocation();
             }
         });
-
-//        MyApplication myApplication = (MyApplication)getApplicationContext();
-//        savedLocations = myApplication.getMyLocations();
     } //final onCreate
 
     private void onClickUpdateLocation() {
