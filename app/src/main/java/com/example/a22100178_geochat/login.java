@@ -17,13 +17,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import POJOs.Usuario;
+import managers.ServerManager;
 
 public class login extends AppCompatActivity {
 
@@ -31,7 +26,9 @@ public class login extends AppCompatActivity {
     EditText et_username;
     EditText et_pass;
     Button btn_register;
-    Usuario mi_usuario = new Usuario();
+    Usuario myUser = new Usuario();
+
+    ServerManager myServerManager = new ServerManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,25 +62,19 @@ public class login extends AppCompatActivity {
     public void registrarUsuario(){
         //Validar campo no vacio
         if(!et_username.getText().toString().isEmpty() && !et_pass.getText().toString().isEmpty()){
-            mi_usuario.setNombre(et_username.getText().toString().trim());
-            mi_usuario.setPassword(et_pass.getText().toString().trim());
+            myUser.setNombre(et_username.getText().toString().trim());
+            myUser.setPassword(et_pass.getText().toString().trim());
 
-            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Usuarios");
+            myServerManager.sendUser(myUser.getNombre(), myUser.getPassword(), new ServerManager.LoginCallback() {
+                @Override
+                public void onSuccess() {
+                    Toast.makeText(getApplicationContext(), "¡El registro fue exitoso!", Toast.LENGTH_SHORT).show();
+                }
 
-            //Iniciar datos de ubicacion en 0s
-            Map<String, Object> datos = new HashMap<>();
-            datos.put("password",mi_usuario.getPassword());
-            datos.put("latitud", 0);
-            datos.put("longitud", 0);
-
-            // Guardar usando el nombre de usuario como clave
-            dbRef.child(mi_usuario.getNombre()).setValue(datos)
-            .addOnSuccessListener(aVoid -> {
-                Toast.makeText(getApplicationContext(), "¡El registro fue exitoso!", Toast.LENGTH_SHORT).show();
-
-            })
-            .addOnFailureListener(e -> {
-                Toast.makeText(getApplicationContext(), "Error al registrar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                @Override
+                public void onFailure(String error) {
+                    Toast.makeText(getApplicationContext(), "Error de servidor: " + error, Toast.LENGTH_SHORT).show();
+                }
             });
 
         }

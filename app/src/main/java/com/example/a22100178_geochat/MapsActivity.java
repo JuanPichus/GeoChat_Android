@@ -29,9 +29,15 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.a22100178_geochat.databinding.ActivityMapsBinding;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import POJOs.Usuario;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private static final int PERMISSIONS_FINE_LOCATION = 99;
@@ -50,6 +56,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationCallback locationCallback;
 
     ImageButton btn_updateLoc;
+
+    Usuario myUser = new Usuario();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +107,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     } //final onCreate
 
     private void onClickUpdateLocation() {
+
         updateGps();
+
     }
 
     @Override
@@ -207,6 +217,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .fillColor(0x1A00FF00));
         circles.add(circle);
     }
+
+
 
 
 }
