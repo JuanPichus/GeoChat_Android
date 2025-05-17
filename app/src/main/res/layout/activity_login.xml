@@ -33,6 +33,19 @@
         android:textColorHint="#3A3A3A"
         android:layout_marginBottom="24dp" />
 
+    <EditText
+        android:id="@+id/et_password"
+        android:layout_width="300dp"
+        android:maxWidth="300dp"
+        android:layout_height="50dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="12dp"
+        android:textAlignment="center"
+        android:textColor="#000"
+        android:textColorHint="#3A3A3A"
+        android:layout_marginBottom="24dp" />
+
     <Button
         android:id="@+id/btn_register"
         android:layout_width="200dp"

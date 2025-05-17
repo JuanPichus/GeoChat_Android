@@ -31,6 +31,7 @@ public class login extends AppCompatActivity {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
     EditText et_username;
+    EditText et_pass;
     Button btn_register;
     Usuario mi_usuario = new Usuario();
 
@@ -46,14 +47,16 @@ public class login extends AppCompatActivity {
         });
 
         et_username = findViewById(R.id.et_username);
+        et_pass = findViewById(R.id.et_password);
         btn_register = findViewById(R.id.btn_register);
+
 
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registrarUsuario();
                 if (checkLocationPermissions()) {
-                    goToMainActivity();
+                    goToNextActivity();
                 } else {
                     requestLocationPermissions();
                 }
@@ -63,13 +66,15 @@ public class login extends AppCompatActivity {
 
     public void registrarUsuario(){
         //Validar campo no vacio
-        if(!et_username.getText().toString().isEmpty()){
+        if(!et_username.getText().toString().isEmpty() && !et_pass.getText().toString().isEmpty()){
             mi_usuario.setNombre(et_username.getText().toString().trim());
+            mi_usuario.setPassword(et_pass.getText().toString().trim());
 
             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Usuarios");
 
             //Iniciar datos de ubicacion en 0s
             Map<String, Object> datos = new HashMap<>();
+            datos.put("password",mi_usuario.getPassword());
             datos.put("latitud", 0);
             datos.put("longitud", 0);
 
@@ -77,12 +82,15 @@ public class login extends AppCompatActivity {
             dbRef.child(mi_usuario.getNombre()).setValue(datos)
             .addOnSuccessListener(aVoid -> {
                 Toast.makeText(getApplicationContext(), "¡El registro fue exitoso!", Toast.LENGTH_SHORT).show();
-                // Redirigir a MainActivity
+
             })
             .addOnFailureListener(e -> {
                 Toast.makeText(getApplicationContext(), "Error al registrar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
 
+        }
+        else{
+            Toast.makeText(getApplicationContext(),"Porfavor llene los campos...", Toast.LENGTH_SHORT);
         }
     }
 
@@ -100,10 +108,10 @@ public class login extends AppCompatActivity {
         }, LOCATION_PERMISSION_REQUEST_CODE);
     }
 
-    private void goToMainActivity() {
+    private void goToNextActivity() {
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
-        finish(); // opcional, para que no se pueda volver con el botón "atrás"
+        finish(); "
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -119,7 +127,7 @@ public class login extends AppCompatActivity {
             }
 
             if (allGranted) {
-                goToMainActivity();
+                goToNextActivity();
             } else {
                 Toast.makeText(this, "Se requieren permisos de ubicación para continuar", Toast.LENGTH_LONG).show();
             }
