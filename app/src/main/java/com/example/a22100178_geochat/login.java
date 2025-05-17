@@ -3,7 +3,6 @@ package com.example.a22100178_geochat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +13,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -90,7 +88,7 @@ public class login extends AppCompatActivity {
 
         }
         else{
-            Toast.makeText(getApplicationContext(),"Porfavor llene los campos...", Toast.LENGTH_SHORT);
+            Toast.makeText(getApplicationContext(),"Porfavor llene los campos...", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -111,7 +109,7 @@ public class login extends AppCompatActivity {
     private void goToNextActivity() {
         Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
-        finish(); "
+        finish();
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
