@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import POJOs.Usuario;
+import managers.ServerManager;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private static final int PERMISSIONS_FINE_LOCATION = 99;
@@ -58,6 +59,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ImageButton btn_updateLoc;
 
     Usuario myUser = new Usuario();
+
+    ServerManager myServerManager = new ServerManager();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,6 +199,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 markerOptions.title("Lat: " + currentLocation.getLatitude() + "Lon: " + currentLocation.getLongitude());
                 mMap.addMarker(markerOptions);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.0f));
+
+                //Enviar ubicación al servidor
+                myServerManager.sendLocation(myUser.getNombre(), myUser.getPassword(), currentLocation.getLatitude(), currentLocation.getLongitude(), new ServerManager.UbicacionCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getApplicationContext(), "Ubicación enviada al Servidor", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(String error) {
+                        Toast.makeText(getApplicationContext(), "Error: " + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             } else {
                 Log.w("LOCATION", "No se pudo obtener la ubicacion actual");
             }
