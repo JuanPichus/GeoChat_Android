@@ -1,13 +1,19 @@
 package managers;
 
 import android.util.Log;
-import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import POJOs.Mensaje;
 
 public class ServerManager {
 
@@ -24,6 +30,16 @@ public class ServerManager {
     public interface UbicacionCallback {
         void onSuccess();
         void onFailure(String error);
+    }
+
+    public interface ChatCallback {
+        void onSuccess();
+        void onFailure(String error);
+    }
+
+    public interface messageListenerCallback {
+        void onMensajesRecibidos(List<Mensaje> mensajes);
+        void onError(String error);
     }
 
 
@@ -75,4 +91,44 @@ public class ServerManager {
             callback.onFailure("Error de conexión: " + e.getMessage());
         });
     }
+
+    public void sendMessage(String emisor, String receptor, String texto, ChatCallback callback) {
+        String chatId = getChatId(emisor, receptor);
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats").child(chatId);
+
+        Mensaje mensaje = new Mensaje(emisor, receptor, texto);
+
+        dbRef.push().setValue(mensaje)
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+    }
+
+    private String getChatId(String user1, String user2) {
+        return (user1.compareTo(user2) < 0) ? user1 + "_" + user2 : user2 + "_" + user1;
+    }
+
+    public void messageListener(String usuario1, String usuario2, messageListenerCallback callback) {
+        String chatId = getChatId(usuario1, usuario2);
+        DatabaseReference chatRef = FirebaseDatabase.getInstance()
+                .getReference("Chats")
+                .child(chatId);
+
+        chatRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                List<Mensaje> mensajes = new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Mensaje mensaje = snap.getValue(Mensaje.class);
+                    mensajes.add(mensaje);
+                }
+                callback.onMensajesRecibidos(mensajes);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                callback.onError(error.getMessage());
+            }
+        });
+    }
+
 }

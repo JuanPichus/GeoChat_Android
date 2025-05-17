@@ -203,6 +203,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //Enviar ubicación al servidor
                 myServerManager.sendLocation(myUser.getNombre(), myUser.getPassword(), currentLocation.getLatitude(), currentLocation.getLongitude(), new ServerManager.UbicacionCallback() {
                     @Override
+                    //estos son como el if return true/false si se envio los datos al servidor, pero al ser un proceso externo que no sigue el flujo de la app requiere un callback embebido en el mismo manager
                     public void onSuccess() {
                         Toast.makeText(getApplicationContext(), "Ubicación enviada al Servidor", Toast.LENGTH_SHORT).show();
                     }
