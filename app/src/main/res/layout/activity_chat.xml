@@ -42,17 +42,20 @@
     </LinearLayout>
 
     <!-- Lista de mensajes -->
+
+    <!-- Campo de entrada y botón de enviar -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messages_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/top_bar"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/message_input_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/message_input_layout" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar"
+        app:layout_constraintVertical_bias="0.0" />
 
-    <!-- Campo de entrada y botón de enviar -->
     <LinearLayout
         android:id="@+id/message_input_layout"
         android:layout_width="0dp"
