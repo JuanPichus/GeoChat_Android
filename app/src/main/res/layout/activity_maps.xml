@@ -45,7 +45,7 @@
             android:id="@+id/btn_getLocations"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@mipmap/icon_refresh_round"
+            android:background="@mipmap/icon_getlocations_round"
             android:layout_marginHorizontal="20dp"
 
             >
