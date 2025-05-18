@@ -27,8 +27,7 @@ public class GeofenceManager {
         this.geofenceHelper = helper;
     }
 
-    public void addGeofenceAtLocation(Location location) {
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+    public void addGeofenceAtLocation(LatLng latLng) {
         Geofence geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, GEOFENCE_RADIUS,
                 Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT);
 

@@ -251,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addGeofenceAtUserLocation(Location location) {
-        geofenceManager.addGeofenceAtLocation(currentLocation);
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        geofenceManager.addGeofenceAtLocation(latLng);
     }
 }

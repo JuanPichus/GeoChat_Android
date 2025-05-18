@@ -164,28 +164,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        LatLng defLoc = new LatLng(20, -105);
-
-        LatLng lastLocationPlaced = defLoc;
-
-        try {
-//            for (Location location : savedLocations) {
-//                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//                MarkerOptions markerOptions = new MarkerOptions();
-//                markerOptions.position(latLng);
-//                markerOptions.title("Lat: " + location.getLatitude() + "Lon: " + location.getLongitude());
-//                mMap.addMarker(markerOptions);
-//                lastLocationPlaced = latLng;
-//            }
-        } catch (Exception e) {
-            Log.e("MAPA", "Error al cargar direcciones: " + e.getMessage());
-            Toast.makeText(geofenceHelper, "No hay ubicación", Toast.LENGTH_SHORT).show();
-        }
-        // Add a marker in Sydney and move the camera
-
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     private void updateGps() {
