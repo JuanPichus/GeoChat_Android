@@ -2,6 +2,9 @@ package POJOs;
 
 public class MapUser {
     public MapUser(String username, Double latitud, Double longitud) {
+        this.Username = username;
+        this.latitud = latitud;
+        this.longitud = longitud;
     }
 
     public MapUser(){

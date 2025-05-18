@@ -244,6 +244,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //Aqui se devuelve un arreglo de los usuarios y su ubicacion
             public void onSuccess(List<MapUser> mapUsers) {
                 for (MapUser u : mapUsers) {
+                    Toast.makeText(getApplicationContext(),"Se actualizo la ubicación de los demás", Toast.LENGTH_SHORT).show();
                     Log.d("Usuario", u.getUsername() + ": " + u.getLatitud() + ", " + u.getLongitud());
                     /*
                     MarkerOptions markerOptions = new MarkerOptions();
