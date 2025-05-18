@@ -50,7 +50,6 @@ public class chat extends AppCompatActivity {
             public void onMensajesRecibidos(List<Mensaje> mensajes) {
                 //implementen aqui la logica de que hacer con los nuevos mensajes; devuelve una list de la mensajes (objetos mensaje)
 
-
             }
 
             @Override

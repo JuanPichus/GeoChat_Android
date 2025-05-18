@@ -174,7 +174,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
                 Log.d("LOCATION", "Ubicación actual: " + location.getLatitude() + ", " + location.getLongitude());
-                Toast.makeText(geofenceHelper, "Ubicación obtenida correctamente", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Ubicación obtenida correctamente", Toast.LENGTH_SHORT).show();
 
 //                geofenceManager.addGeofenceAtLocation(currentLocation);
 //                Log.d("GEOVALLA", "Geovalla creada correctamente");
@@ -265,6 +265,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 .title(username)
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
                         userMarkers.put(username, marker);
+
+                        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(@NonNull Marker marker) {
+                                Toast.makeText(MapsActivity.this, "Chat con: " + marker.getTitle(), Toast.LENGTH_SHORT).show();
+
+                                return false;
+                            }
+                        });
 
                         // Agregar círculo
                         Circle circle = mMap.addCircle(new CircleOptions()
