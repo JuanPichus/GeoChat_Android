@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import POJOs.MapUser;
 import POJOs.Mensaje;
-import POJOs.Usuario;
 
 public class ServerManager {
 
@@ -44,7 +44,7 @@ public class ServerManager {
     }
 
     public interface UsuarioListCallback {
-        void onSuccess(List<Usuario> usuarios);
+        void onSuccess(List<MapUser> mapUsers);
         void onFailure(String error);
     }
 
@@ -102,17 +102,16 @@ public class ServerManager {
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Usuarios");
 
         dbRef.get().addOnSuccessListener(snapshot -> {
-            List<Usuario> listaUsuarios = new ArrayList<>();
+            List<MapUser> listaUsuarios = new ArrayList<>();
 
             for (DataSnapshot userSnap : snapshot.getChildren()) {
                 String username = userSnap.getKey();
                 Double latitud = userSnap.child("latitud").getValue(Double.class);
                 Double longitud = userSnap.child("longitud").getValue(Double.class);
 
-                // Validar valores
                 if (username != null && latitud != null && longitud != null) {
-                    Usuario usuario = new Usuario(username, latitud, longitud);
-                    listaUsuarios.add(usuario);
+                    MapUser usuarioEnMapa = new MapUser(username, latitud, longitud);
+                    listaUsuarios.add(usuarioEnMapa);
                 }
             }
 

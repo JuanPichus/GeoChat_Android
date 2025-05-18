@@ -18,29 +18,43 @@
         map:layout_constraintTop_toTopOf="parent"
         tools:context=".MapsActivity" />
 
-    <View
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="28dp"
-        android:background="@drawable/rounded_background"
-        map:layout_constraintBottom_toBottomOf="parent"
-        map:layout_constraintEnd_toEndOf="parent"
-        map:layout_constraintHorizontal_bias="0.498"
-        map:layout_constraintStart_toStartOf="parent">
 
-    </View>
 
-    <ImageButton
-        android:id="@+id/btn_updateLoc"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="28dp"
-        android:background="@drawable/baseline_refresh_24"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintEnd_toEndOf="parent"
         map:layout_constraintHorizontal_bias="0.501"
-        map:layout_constraintStart_toStartOf="parent">
+        map:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="28dp"
+        android:gravity="center"
+        >
 
-    </ImageButton>
+        <ImageButton
+            android:id="@+id/btn_updateLoc"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@mipmap/icon_refresh_round"
+            android:layout_marginHorizontal="20dp"
+            >
+        </ImageButton>
+
+        <ImageButton
+            android:id="@+id/btn_getLocations"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@mipmap/icon_refresh_round"
+            android:layout_marginHorizontal="20dp"
+
+            >
+        </ImageButton>
+
+
+
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

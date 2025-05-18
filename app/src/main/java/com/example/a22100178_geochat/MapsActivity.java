@@ -8,7 +8,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,14 +28,11 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.a22100178_geochat.databinding.ActivityMapsBinding;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import POJOs.MapUser;
 import POJOs.Usuario;
 import managers.ServerManager;
 
@@ -57,6 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationCallback locationCallback;
 
     ImageButton btn_updateLoc;
+    ImageButton btn_getLocations;
 
     Usuario myUser = new Usuario();
 
@@ -70,6 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(binding.getRoot());
 
         btn_updateLoc = findViewById(R.id.btn_updateLoc);
+        btn_getLocations = findViewById(R.id.btn_getLocations);
 
         locationCallback = new LocationCallback() {
             @Override
@@ -102,6 +100,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 onClickUpdateLocation();
+            }
+        });
+
+        btn_getLocations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getLocations();
             }
         });
     } //final onCreate
@@ -233,6 +238,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         circles.add(circle);
     }
 
+    public void getLocations(){
+        myServerManager.getUserLocations(new ServerManager.UsuarioListCallback() {
+            @Override
+            //Aqui se devuelve un arreglo de los usuarios y su ubicacion
+            public void onSuccess(List<MapUser> mapUsers) {
+                for (MapUser u : mapUsers) {
+                    Log.d("Usuario", u.getUsername() + ": " + u.getLatitud() + ", " + u.getLongitud());
+                    /*
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(latLng);
+                    markerOptions.title("Lat: " + currentLocation.getLatitude() + "Lon: " + currentLocation.getLongitude());
+                    mMap.addMarker(markerOptions);
+
+                     */
+                }
+
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(getApplicationContext(),error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
 
