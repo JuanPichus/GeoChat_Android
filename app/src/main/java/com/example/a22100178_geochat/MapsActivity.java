@@ -23,14 +23,19 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.a22100178_geochat.databinding.ActivityMapsBinding;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import POJOs.MapUser;
 import POJOs.Usuario;
@@ -45,8 +50,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GeofenceManager geofenceManager;
     private GeofenceHelper geofenceHelper;
 
-    List<Circle> circles = new ArrayList<>();
-    List<Location>savedLocations;
+    Map<String, Marker> userMarkers = new HashMap<>();
+    Map<String, Circle> userCircles = new HashMap<>();
+    Map<String, LatLng> userGeofenceLoc = new HashMap<>();
+
     Location currentLocation;
     Address address;
 
@@ -185,21 +192,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationManagerHelper.getCurrentLocation(location -> {
             if (location != null) {
                 currentLocation = location;
+                String username = myUser.getNombre();
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
                 Log.d("LOCATION", "Ubicación actual: " + location.getLatitude() + ", " + location.getLongitude());
-                geofenceManager.addGeofenceAtLocation(currentLocation);
-                Log.d("GEOVALLA", "Geovalla creada correctamente");
                 Toast.makeText(geofenceHelper, "Ubicación obtenida correctamente", Toast.LENGTH_SHORT).show();
 
-                if (!circles.isEmpty()) {
-                    clearAllCircles();
+//                geofenceManager.addGeofenceAtLocation(currentLocation);
+//                Log.d("GEOVALLA", "Geovalla creada correctamente");
+
+                //Actualizar circulo del usuario
+                if (userCircles.containsKey(username)) {
+                    userCircles.get(username).remove();
                 }
 
-                LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                drawGeofence(latLng);
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title("Lat: " + currentLocation.getLatitude() + "Lon: " + currentLocation.getLongitude());
-                mMap.addMarker(markerOptions);
+                Circle circle = mMap.addCircle(new CircleOptions()
+                        .center(latLng)
+                        .radius(20)
+                        .strokeColor(Color.BLACK)
+                        .fillColor(0x1A0000FF));
+                userCircles.put(username, circle);
+
+                //Actualizar marcador del usuario
+                if (userMarkers.containsKey(username)) {
+                    userMarkers.get(username).remove();
+                }
+                Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(username)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                userMarkers.put(username, marker);
+
+                //Mover camara
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.0f));
 
                 //Enviar ubicación al servidor
@@ -222,20 +246,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void clearAllCircles() {
-        for (Circle circle : circles) {
-            circle.remove();
+    public void removeUserData(String username) {
+        if (userMarkers.containsKey(username)) {
+            userMarkers.get(username).remove();
+            userMarkers.remove(username);
         }
-        circles.clear();
-    }
 
-    private void drawGeofence(LatLng latLng) {
-        Circle circle = mMap.addCircle(new CircleOptions()
-                .center(latLng)
-                .radius(20)
-                .strokeColor(Color.BLACK)
-                .fillColor(0x1A00FF00));
-        circles.add(circle);
+        if (userCircles.containsKey(username)) {
+            userCircles.get(username).remove();
+            userCircles.remove(username);
+        }
+
+//        if (userGeofenceLoc.containsKey(username)) {
+//            geofenceManager.removeGeofenceByLoc(userGeofenceLoc.get(username));
+//            userGeofenceLoc.remove(username);
+//        }
     }
 
     public void getLocations(){
@@ -243,9 +268,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             //Aqui se devuelve un arreglo de los usuarios y su ubicacion
             public void onSuccess(List<MapUser> mapUsers) {
+                String mainUser = myUser.getNombre();
                 for (MapUser u : mapUsers) {
-                    Toast.makeText(getApplicationContext(),"Se actualizo la ubicación de los demás", Toast.LENGTH_SHORT).show();
-                    Log.d("Usuario", u.getUsername() + ": " + u.getLatitud() + ", " + u.getLongitud());
+                    if (!Objects.equals(u.getUsername(), mainUser)) {
+                        String username = u.getUsername();
+                        LatLng latLng = new LatLng(u.getLatitud(), u.getLongitud());
+
+                        if (userMarkers.containsKey(username)) {
+                            Objects.requireNonNull(userMarkers.get(username)).remove(); //userMarkers.get(username).remove(); Esta es la funcion, pero de protección se usa la linea que se puso
+                        }
+                        if (userCircles.containsKey(username)) {
+                            Objects.requireNonNull(userCircles.get(username)).remove(); //userCircles.get(username).remove(); Esta es la funcion, pero de protección se usa la linea que se puso
+                        }
+
+                        // Agregar marcador
+                        Marker marker = mMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title(username)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                        userMarkers.put(username, marker);
+
+                        // Agregar círculo
+                        Circle circle = mMap.addCircle(new CircleOptions()
+                                .center(latLng)
+                                .radius(20)
+                                .strokeColor(Color.BLACK)
+                                .fillColor(0x1A00FF00));
+                        userCircles.put(username, circle);
+
+                        Log.d("Usuario", u.getUsername() + ": " + u.getLatitud() + ", " + u.getLongitud());
+
                     /*
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(latLng);
@@ -253,8 +305,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mMap.addMarker(markerOptions);
 
                      */
+                    }
                 }
-
+                Toast.makeText(getApplicationContext(),"Se actualizo la ubicación de los demás", Toast.LENGTH_SHORT).show();
             }
 
             @Override
